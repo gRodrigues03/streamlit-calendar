@@ -1,21 +1,23 @@
 import "../styles/Calendar.css"
 
+import {
+    CalendarOptions,
+    DateSelectArg,
+    EventApi,
+    EventSourceInput,
+    ViewApi,
+} from "@fullcalendar/core"
+import FullCalendar from "@fullcalendar/react"
+
 import dayGridPlugin from "@fullcalendar/daygrid"
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction"
 import listPlugin from "@fullcalendar/list"
 import multiMonthPlugin from "@fullcalendar/multimonth"
-import FullCalendar from "@fullcalendar/react"
 import timeGridPlugin from "@fullcalendar/timegrid"
 
 import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 
-import {
-  CalendarOptions,
-  DateSelectArg,
-  EventApi,
-  EventSourceInput,
-  ViewApi,
-} from "@fullcalendar/core"
+
 import React, { useRef } from "react"
 import { Streamlit, withStreamlitConnection } from "streamlit-component-lib"
 import { ComponentProps } from "streamlit-component-lib/dist/StreamlitReact"
