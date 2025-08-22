@@ -1,24 +1,17 @@
 import "../styles/Calendar.css"
 
-import adaptivePlugin from "@fullcalendar/adaptive" // premium
 import dayGridPlugin from "@fullcalendar/daygrid"
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction"
 import listPlugin from "@fullcalendar/list"
 import multiMonthPlugin from "@fullcalendar/multimonth"
 import FullCalendar from "@fullcalendar/react"
-import resourceDayGridPlugin from "@fullcalendar/resource-daygrid" // premium
-import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid" // premium
-import resourceTimelinePlugin from "@fullcalendar/resource-timeline" // premium
 import timeGridPlugin from "@fullcalendar/timegrid"
-import timelinePlugin from "@fullcalendar/timeline" // premium
-import rrulePlugin from "@fullcalendar/rrule"; //
+import rrulePlugin from "@fullcalendar/rrule"
 
 import {
   CalendarOptions,
   DateSelectArg,
   EventApi,
-  EventChangeArg,
-  EventClickArg,
   EventSourceInput,
   ViewApi,
 } from "@fullcalendar/core"
@@ -30,30 +23,17 @@ import {
   Callback,
   DateClickComponentValue,
   DateClickValue,
-  EventChangeComponentValue,
-  EventChangeValue,
-  EventClickComponentValue,
-  EventClickValue,
-  EventMouseEnterComponentValue,
-  EventMouseEnterValue,
-  EventsSetComponentValue,
-  EventsSetValue,
   SelectComponentValue,
   SelectValue,
   ViewValue,
 } from "../types/Calendar.type"
 
 const ENABLED_PLUGINS = [
-  adaptivePlugin,
   dayGridPlugin,
   interactionPlugin,
   listPlugin,
   multiMonthPlugin,
-  resourceDayGridPlugin,
-  resourceTimeGridPlugin,
-  resourceTimelinePlugin,
   timeGridPlugin,
-  timelinePlugin,
   rrulePlugin,
 ]
 
@@ -66,11 +46,10 @@ type Props = ComponentProps<{
   options?: CalendarOptions
   custom_css?: string
   callbacks?: Callback[]
-  license_key?: string
 }>
 
 const CalendarFC: React.FC<Props> = ({
-  args: { events, options, custom_css, callbacks, license_key },
+  args: { events, options, custom_css, callbacks },
 }) => {
   const calendarRef = useRef<FullCalendar>(null)
 
@@ -83,22 +62,6 @@ const CalendarFC: React.FC<Props> = ({
     currentEnd: view.currentEnd.toISOString(),
   })
 
-  // Attach native mouseenter event to event elements
-  const handleEventMouseEnter = (eventApi: EventApi, view: ViewApi) => {
-    const eventMouseEnter: EventMouseEnterValue = {
-      event: {
-        ...eventApi.toJSON(),
-        resourceId: eventApi.getResources()[0]?.id,
-      },
-      view: getViewValue(view),
-    }
-    const componentValue: EventMouseEnterComponentValue = {
-      callback: "eventMouseEnter",
-      eventMouseEnter,
-    }
-    Streamlit.setComponentValue(componentValue)
-  }
-
   // Use a WeakMap to associate elements with their listeners
   const mouseEnterListeners = React.useRef(new WeakMap<HTMLElement, EventListener>()).current;
 
@@ -110,10 +73,6 @@ const CalendarFC: React.FC<Props> = ({
       if (prevListener) {
         info.el.removeEventListener("mouseenter", prevListener);
       }
-      // Create and store the listener
-      const listener = () => handleEventMouseEnter(info.event, info.view);
-      mouseEnterListeners.set(info.el, listener);
-      info.el.addEventListener("mouseenter", listener);
     }
   }
 
@@ -122,71 +81,11 @@ const CalendarFC: React.FC<Props> = ({
       allDay: arg.allDay,
       date: arg.date.toISOString(),
       view: getViewValue(arg.view),
-      resource: arg.resource?.toJSON(),
     }
 
     const componentValue: DateClickComponentValue = {
       callback: "dateClick",
       dateClick,
-    }
-
-    Streamlit.setComponentValue(componentValue)
-  }
-
-  const handleEventClick = (arg: EventClickArg) => {
-    const eventClick: EventClickValue = {
-      event: {
-        ...arg.event.toJSON(),
-        resourceId: arg.event.getResources()[0]?.id,
-      },
-      view: getViewValue(arg.view),
-    }
-
-    const componentValue: EventClickComponentValue = {
-      callback: "eventClick",
-      eventClick,
-    }
-
-    Streamlit.setComponentValue(componentValue)
-  }
-
-  const handleEventChange = (arg: EventChangeArg) => {
-    const eventChange: EventChangeValue = {
-      oldEvent: {
-        ...arg.oldEvent.toJSON(),
-        resourceId: arg.oldEvent.getResources()[0]?.id,
-      },
-      event: {
-        ...arg.event.toJSON(),
-        resourceId: arg.event.getResources()[0]?.id,
-      },
-      relatedEvents: arg.relatedEvents.map((related) => related.toJSON()),
-      ...(calendarRef.current?.getApi() && {
-        view: getViewValue(calendarRef.current.getApi().view)
-      })
-    }
-
-    const componentValue: EventChangeComponentValue = {
-      callback: "eventChange",
-      eventChange,
-    }
-
-    Streamlit.setComponentValue(componentValue)
-  }
-
-  const handleEventsSet = (events: EventApi[]) => {
-    const eventsSet: EventsSetValue = {
-      events: events.map((event) => ({
-        ...event.toJSON(),
-        resourceId: event.getResources()[0]?.id,
-      })),
-      ...(calendarRef.current?.getApi() && {
-        view: getViewValue(calendarRef.current.getApi().view)
-      })
-    };
-    const componentValue: EventsSetComponentValue = {
-      callback: "eventsSet",
-      eventsSet,
     }
 
     Streamlit.setComponentValue(componentValue)
@@ -198,7 +97,6 @@ const CalendarFC: React.FC<Props> = ({
       start: arg.start.toISOString(),
       end: arg.end.toISOString(),
       view: getViewValue(arg.view),
-      resource: arg.resource?.toJSON(),
     }
 
     const componentValue: SelectComponentValue = {
@@ -219,18 +117,8 @@ const CalendarFC: React.FC<Props> = ({
         ref={calendarRef}
         plugins={ENABLED_PLUGINS}
         events={events}
-        schedulerLicenseKey={license_key}
         dateClick={
           callbacks?.includes("dateClick") ? handleDateClick : undefined
-        }
-        eventClick={
-          callbacks?.includes("eventClick") ? handleEventClick : undefined
-        }
-        eventChange={
-          callbacks?.includes("eventChange") ? handleEventChange : undefined
-        }
-        eventsSet={
-          callbacks?.includes("eventsSet") ? handleEventsSet : undefined
         }
         select={
           callbacks?.includes("select") ? handleSelect : undefined

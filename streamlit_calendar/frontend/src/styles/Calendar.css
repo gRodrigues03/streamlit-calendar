@@ -5,3 +5,90 @@
     --fc-button-bg-color: var(--primary-color);
     --fc-list-event-hover-bg-color: var(--secondary-background-color);
 }
+body {
+    background: #0000 !important;
+    margin: 0
+}
+.fc-day-other {
+    opacity: .8;
+    background: #AAB5;
+}
+.fc-day-other .fc-bg-event {
+    opacity: .6;
+}
+.fc-media-screen {
+    height: 615px
+}
+.fc .fc-daygrid-day.fc-day-today {
+    background-color: rgb(0 0 0 / 0);
+}
+.fc-event-time {
+    font-style: italic;
+}
+.fc-bg-event {
+    opacity: .9
+}
+.fc-event-title {
+    font-weight: 700;
+}
+.fc-toolbar-title {
+    font-size: 1.66rem;
+    font-weight: 600;
+    text-shadow: #3c5a6925 0 1px 3px, rgba(45, 85, 95, .25) 0 2px 10px;
+}
+.fc-toolbar-chunk button {
+    box-shadow: #3c5a6925 0 1px 3px, rgba(45, 85, 95, .25) 0 2px 10px;
+}
+.fc .fc-toolbar-title::first-letter {
+    text-transform: capitalize;
+}
+.fc-daygrid-day-frame:has(.fc-daygrid-day-events .fc-event) {
+    background: #107FffAA;
+}
+
+.fc-event {
+    height: 2rem;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: .5rem;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.fc-dayGridMonth-view > table {
+    width:100%;
+    border: 1.5px solid rgba(121, 131, 145, .9);
+    border-collapse: separate; /* Required for border-radius to work */
+    border-spacing: 0; /* Remove spacing between cells */
+    border-radius: .5rem; /* Base radius for the table */
+}
+
+/* Style for the top-left corner */
+tr:first-of-type th:first-child {
+    border-top-left-radius: .5rem;
+}
+
+/* Style for the top-right corner */
+tr:first-of-type th:last-child {
+    border-top-right-radius: .5rem;
+}
+
+/* Style for the bottom-left corner */
+tbody > tr:last-child > td:first-child {
+    border-bottom-left-radius: .5rem;
+}
+
+/* Style for the bottom-right corner */
+tbody > tr:last-child > td:last-child {
+    border-bottom-right-radius: .5rem;
+}
+
+/* Optional: Add padding and borders to cells */
+td, th {
+    border: 1px solid #ccce;
+    transition: .2s;
+}
