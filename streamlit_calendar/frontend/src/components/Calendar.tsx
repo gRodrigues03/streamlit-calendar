@@ -6,7 +6,8 @@ import listPlugin from "@fullcalendar/list"
 import multiMonthPlugin from "@fullcalendar/multimonth"
 import FullCalendar from "@fullcalendar/react"
 import timeGridPlugin from "@fullcalendar/timegrid"
-import rrulePlugin from "@fullcalendar/rrule"
+
+import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 
 import {
   CalendarOptions,
@@ -34,7 +35,6 @@ const ENABLED_PLUGINS = [
   listPlugin,
   multiMonthPlugin,
   timeGridPlugin,
-  rrulePlugin,
 ]
 
 const FullCalendarWrapper = styled.div<{ $customCSS?: string }>`
@@ -117,6 +117,7 @@ const CalendarFC: React.FC<Props> = ({
         ref={calendarRef}
         plugins={ENABLED_PLUGINS}
         events={events}
+        locale={ptBrLocale}
         dateClick={
           callbacks?.includes("dateClick") ? handleDateClick : undefined
         }
